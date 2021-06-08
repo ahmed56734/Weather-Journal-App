@@ -4,13 +4,6 @@ const API_KEY = "A81kaskkajd18913asdkkasdd1j31iuja132"
 // Create a new date instance dynamically with JS
 
 
-class WeatherEntry {
-    constructor(zipCode, content) {
-        this.date = newDate()
-        this.zipCode = zipCode
-        this.conent = content
-    }
-}
 
 
 const postRequest = async (url = '', data = {}) => {

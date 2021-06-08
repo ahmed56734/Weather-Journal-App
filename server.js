@@ -8,14 +8,15 @@ function getTemp() {
     return getRandomIntInclusive(10, 45)
 }
 
-class WeatherEntry {
-    newDate = function () {
-        let d = new Date();
-        return d.getMonth() + '.' + d.getDate() + '.' + d.getFullYear();
-    };
 
+function newDate() {
+    let d = new Date();
+    return d.getMonth() + '.' + d.getDate() + '.' + d.getFullYear();
+}
+
+class WeatherEntry {
     constructor(zipCode, content) {
-        this.date = this.newDate()
+        this.date = newDate()
         this.zipCode = zipCode
         this.content = content
         this.temp = getTemp()
@@ -57,7 +58,7 @@ const server = app.listen(port, listening);
 
 function listening() {
     // console.log(server);
-    console.log(`running on http://localhost:${port}`);
+    console.log(`running on http://localhost:${port}\n`);
 }
 
 
