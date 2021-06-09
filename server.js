@@ -1,25 +1,14 @@
-function getTemp() {
-    function getRandomIntInclusive(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1) + min); //The maximum is inclusive and the minimum is inclusive
-    }
-
-    return getRandomIntInclusive(10, 45)
-}
-
-
 function newDate() {
     let d = new Date();
     return d.getMonth() + '.' + d.getDate() + '.' + d.getFullYear();
 }
 
 class WeatherEntry {
-    constructor(zipCode, content) {
+    constructor(zipCode, content, temp) {
         this.date = newDate()
         this.zipCode = zipCode
         this.content = content
-        this.temp = getTemp()
+        this.temp = temp
     }
 }
 
@@ -46,6 +35,8 @@ app.use(bodyParser.json());
 
 // Cors for cross origin allowance
 const cors = require('cors');
+const fetch = require("node-fetch");
+
 app.use(cors());
 
 // Initialize the main project folder
@@ -78,7 +69,7 @@ app.get('/api/weather', function (request, response) {
     response.send(projectData);
 });
 
-app.post('/api/weather', function (request, response) {
+app.post('/api/weather', async function (request, response) {
     console.log("post request =>", "\nurl " + request.url, "\nbody " + JSON.stringify(request.body), "\nAuth " + request.header("Authorization"))
     console.log('===============================================================================\n')
 
@@ -91,13 +82,24 @@ app.post('/api/weather', function (request, response) {
         return
     }
 
+    const temp = await getTemperature(getWeatherUrl)
     const body = request.body
     const zipCode = body.zipCode
     const content = body.content
 
-    const weatherEntry = new WeatherEntry(zipCode, content)
+    const weatherEntry = new WeatherEntry(zipCode, content, temp)
     data.push(weatherEntry)
     response.send(projectData)
 })
 
+const WEATHER_API_KEY = "8f19d38f8fa2a04e30e2e21d60878384"
+const cityName = 'cairo'
+const getWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${WEATHER_API_KEY}&units=metric`
+
+function getTemperature(url) {
+    return fetch(url, {method: 'GET'})
+        .then(response => response.json())
+        .then(jsonBody => jsonBody.main.temp)
+        .then(temp => temp + ' °C')
+}
 

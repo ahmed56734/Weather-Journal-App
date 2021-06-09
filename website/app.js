@@ -1,7 +1,7 @@
 /* Global Variables */
 const API_KEY = "A81kaskkajd18913asdkkasdd1j31iuja132"
 
-// Create a new date instance dynamically with JS
+
 
 
 
