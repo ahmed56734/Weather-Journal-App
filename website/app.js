@@ -2,10 +2,6 @@
 const API_KEY = "A81kaskkajd18913asdkkasdd1j31iuja132"
 
 
-
-
-
-
 const postRequest = async (url = '', data = {}) => {
     console.log(data)
     const response = await fetch(url, {
@@ -69,22 +65,39 @@ function updateUI(data) {
     const tempElement = document.getElementById("temp")
     const contentElement = document.getElementById("content")
 
-    dateElement.textContent = lastEntry.date
-    tempElement.textContent = lastEntry.temp
-    contentElement.textContent = lastEntry.content
+    dateElement.textContent = "Date: " + lastEntry.date
+    tempElement.textContent = "Temp: " + lastEntry.temp
+    contentElement.textContent = "Feeling: " + lastEntry.content
 }
 
 
 function main() {
     getAllData()
 
-    document.getElementById("generate").onclick = ev => {
+    document.getElementById("generate").onclick = async (ev) => {
         const zip = document.getElementById("zip").value
         const feeling = document.getElementById("feelings").value
         document.getElementById("zip").value = ""
         document.getElementById("feelings").value = ""
 
-        const requestBody = {zipCode: zip, content: feeling}
+        const temp = await getTemperature(zip)
+        const requestBody = {zipCode: zip, content: feeling, temp: temp}
         addWeatherEntry(requestBody)
     }
 }
+
+const WEATHER_API_KEY = "8f19d38f8fa2a04e30e2e21d60878384"
+
+
+async function getTemperature(zip) {
+    const getWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?zip=${zip}&appid=${WEATHER_API_KEY}&units=metric`
+
+    return fetch(getWeatherUrl, {method: 'GET'})
+        .then(response => response.json())
+        .then(jsonBody => {
+            console.log(jsonBody)
+            return jsonBody.main.temp + ' °C'
+        })
+        .catch(reason => console.log("getWeather error", reason))
+}
+

@@ -35,7 +35,7 @@ app.use(bodyParser.json());
 
 // Cors for cross origin allowance
 const cors = require('cors');
-const fetch = require("node-fetch");
+
 
 app.use(cors());
 
@@ -82,24 +82,18 @@ app.post('/api/weather', async function (request, response) {
         return
     }
 
-    const temp = await getTemperature(getWeatherUrl)
+
     const body = request.body
     const zipCode = body.zipCode
     const content = body.content
+    const temp = body.temp
 
     const weatherEntry = new WeatherEntry(zipCode, content, temp)
     data.push(weatherEntry)
     response.send(projectData)
 })
 
-const WEATHER_API_KEY = "8f19d38f8fa2a04e30e2e21d60878384"
-const cityName = 'cairo'
-const getWeatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${WEATHER_API_KEY}&units=metric`
 
-function getTemperature(url) {
-    return fetch(url, {method: 'GET'})
-        .then(response => response.json())
-        .then(jsonBody => jsonBody.main.temp)
-        .then(temp => temp + ' °C')
-}
+
+
 
