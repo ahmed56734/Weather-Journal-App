@@ -1,6 +1,6 @@
 function newDate() {
     let d = new Date();
-    return d.getMonth() + '.' + d.getDate() + '.' + d.getFullYear();
+    return d.getMonth() + 1+ '.' + d.getDate() + '.' + d.getFullYear();
 }
 
 class WeatherEntry {
